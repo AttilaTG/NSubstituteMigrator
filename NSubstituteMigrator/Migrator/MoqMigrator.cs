@@ -20,7 +20,6 @@ namespace NSubstituteMigrator.Migrator
                 return;
             }
 
-            // Filtrar proyectos de test
             var testProjects = _migratorService.GetTestProjects(rootFolder);
 
             if (!testProjects.Any())
@@ -29,12 +28,10 @@ namespace NSubstituteMigrator.Migrator
                 return;
             }
 
-            // Mostrar menú interactivo
             var selectedProjectPath = _migratorService.SelectTestProject(testProjects);
 
             Console.WriteLine($"Has seleccionado: {Path.GetFileNameWithoutExtension(selectedProjectPath)}");
 
-            // Buscar archivos que usen Moq
             var testFiles = GetMoqFiles(selectedProjectPath);
 
             if (!testFiles.Any())
@@ -45,7 +42,6 @@ namespace NSubstituteMigrator.Migrator
 
             Console.WriteLine($"Archivos detectados que usan Moq: {testFiles.Count()}");
 
-            // Realizar la migración
             MigrateFiles(testFiles);
 
             Console.WriteLine("Migración completada.");

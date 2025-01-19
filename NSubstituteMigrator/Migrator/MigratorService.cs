@@ -1,22 +1,19 @@
-﻿using NSubstituteMigrator.Migrator.Contracts;
-using Spectre.Console;
+﻿using Spectre.Console;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace NSubstituteMigrator.Migrator
 {
-    public class MigratorService(IDirectoryWrapper directoryWrapper, IXmlLoader xmlLoader)
+    public class MigratorService
     {
-        private readonly IDirectoryWrapper _directoryWrapper = directoryWrapper;
-        private readonly IXmlLoader _xmlLoader = xmlLoader;
-
         public List<string> GetTestProjects(string rootFolder)
         {
-            var projectFiles = _directoryWrapper.GetFiles(rootFolder, "*.csproj", SearchOption.AllDirectories);
+            var projectFiles = Directory.GetFiles(rootFolder, "*.csproj", SearchOption.AllDirectories);
 
             var testProjects = new List<string>();
             foreach (var project in projectFiles)
             {
-                var xml = _xmlLoader.Load(project);
+                var xml = XDocument.Load(path);
                 var isTestProject = xml.Descendants("IsTestProject")
                                        .FirstOrDefault()?.Value.Equals("true", StringComparison.OrdinalIgnoreCase);
 
@@ -31,11 +28,13 @@ namespace NSubstituteMigrator.Migrator
 
         public string SelectTestProject(List<string> testProjects)
         {
+            var options = new List<string> { "All" };
+            options.AddRange(testProjects);
             return AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("Selecciona un proyecto de test para migrar:")
                     .PageSize(10)
-                    .AddChoices(testProjects));
+                    .AddChoices(options));
         }
 
         public void MigrateFile(string inputFilePath)

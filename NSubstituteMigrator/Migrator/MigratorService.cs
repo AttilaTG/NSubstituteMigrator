@@ -13,7 +13,7 @@ namespace NSubstituteMigrator.Migrator
             var testProjects = new List<string>();
             foreach (var project in projectFiles)
             {
-                var xml = XDocument.Load(path);
+                var xml = XDocument.Load(project);
                 var isTestProject = xml.Descendants("IsTestProject")
                                        .FirstOrDefault()?.Value.Equals("true", StringComparison.OrdinalIgnoreCase);
 

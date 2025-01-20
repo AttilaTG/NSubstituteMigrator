@@ -45,9 +45,10 @@ namespace NSubstituteMigrator.Migrator
         {
             (@"new Mock<(.*?)>\(\)", "Substitute.For<$1>()"),
             (@"Mock<(.*?)>", "$1"),
-            (@"\.Setup\(\s*\w+\s*=>\s*\w+\.(\w+)\((.*)\)\)", ".$1($2)"),
+            (@"\.Setup\(\s*\w+\s*=>\s*\w+\.(\w+)\((.*?)\)\)", ".$1($2)"),
             (@"\.Setup\(\s*\w+\s*=>\s*\w+\.(\w+)\s*\)", ".$1"),
-            (@"\.ReturnsAsync\(([^()]+)\)", ".Returns(Task.FromResult($1))"),
+            (@"\.Setup\(\s*\w+\s*=>\s*\w+\.(\w+)<(.*?)>\((.*?)\)\)", ".$1<$2>($3)"),
+            (@"\.ReturnsAsync\((.+?)\)", ".Returns(Task.FromResult($1))"),
             (@"\.Verifiable\(\)", ""),
             (@"It\.IsAny", "Arg.Any"),
             (@"It\.Is", "Arg.Is"),
